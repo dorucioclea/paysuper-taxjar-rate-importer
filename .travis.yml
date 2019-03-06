@@ -9,7 +9,7 @@ script:
 - go test ./... -coverprofile=coverage.out -covermode=atomic
 after_success:
 - bash <(curl -s https://codecov.io/bash)
-- curl -X POST $JENKINS --data-urlencode json='{"PROJECT":"${TRAVIS_REPO_SLUG}", "BRANCH":"${TRAVIS_BRANCH}"}'
+- curl -X POST $JENKINS --data-urlencode json='{\\\"PROJECT\\\":\\\"$TRAVIS_REPO_SLUG\\\", \\\"BRANCH\\\":\\\"$TRAVIS_BRANCH\\\"}'
 notifications:
   slack:
     secure: SFzM8eWtvTHQmq7VWIRpxyZ5Ic2mKFyR35NdfIC1ON4yroSTrRlcKhtlvmlt6vYmyj9+gFKRrkpnlsZlDMnW7bv0W7R0RCeWipzk4cXDPsbWjGZ3Qd6M6JOxTM7SreIu3FBv6bp2uq77lja7XKvtvKghM98QlVKBvYzuZNG0NUXcepuEvQEkkD17oq/awxhOyEeJtCn3+HPpiaOMdsv+nmv4gveCUgCU/Al1nhz64G16dr6nS6bnLrZTj+PzH2z8AWOWg6zFfDuXMG38/nhA6aK0yGutlXP06jv9rTsuSHeLt+tUA5ZWoprmdBlgBNVzc/GrnHi0kX7+1mdbemXJ1sXDxcZZTo6TnvKPLNfoCD1uvYhnbPzQ/zzsRtfmDi3bg9eal51YUXZgebcV65kLCvxFOuI3et5qK9fyV9KSR7fCihsXlG7v7rDUKvZMrrWkv+AIY1yEL14DS+EOY7UuYlNj8C04gWrhlNX9dFFKsDWgFjuV94fr6/vh31zg23RJbBa3hLX0PRVh+49F208oXtNY0flC1wNNxtrfBKWk6/+E5Kb1YS7BEzbrSU/jrsz7A6TbR7WmMEXlKCGjEN2HGjqpcmYjiklOmRNf8qCOfMjGu09xWhRrFBbhLf6BAHK2+uuBPaAS1U9kfXdp01CCLCy1fuFvWP3RU9ZKOi6Y5pg=
