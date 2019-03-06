@@ -12,18 +12,13 @@ from TaxJar API. This application sync only combined rates.
 
 Application designed to be launched with Kubernetes and handle all configuration from env variables:
 
-+---------------+------------------------------------------------------------------------+
-| Variable      | Description                                                            |
-+---------------+------------------------------------------------------------------------+
-| TAX_JAR_TOKEN | TaxJar uses API keys to allow access to the API. This token            |
-|               | could be generate in Account > API Access after success sign-up.       |
-+---------------+------------------------------------------------------------------------+
-| ZIP_CODE_FILE | The path to Simplemaps CSV postal code file.                           |
-+---------------+------------------------------------------------------------------------+
-| CACHE_PATH    | The path to folder local LevelDB cache for rates. Default is `./cache` |
-+---------------+------------------------------------------------------------------------+
-| MAX_RPS       | The max allowed RPS for TaxJar API. Default is `250`                   |
-+---------------+------------------------------------------------------------------------+
+| Variable      | Description                                                                                            |
+|---------------|--------------------------------------------------------------------------------------------------------|
+| TAX_JAR_TOKEN | TaxJar uses API keys to allow access to the API. This token could be generate in Account > API Access. |
+| ZIP_CODE_FILE | The path to Simplemaps CSV postal code file.                                                           |
+| CACHE_PATH    | The path to folder local LevelDB cache for rates. Default is `./cache`                                 |
+| MAX_RPS       | The max allowed RPS for TaxJar API. Default is `250`                                                   |
+
 
 
  
