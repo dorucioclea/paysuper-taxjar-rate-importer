@@ -1,8 +1,9 @@
 {{- $job := .Values.backend -}}
+{{- $jobName := printf "%s-%s" .Release.Name $job.name }}
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: {{ .Release.Name }}-share
+  name: {{ .Release.Name }}-cache
   labels:
     app: {{ .Release.Name }}
 spec:
@@ -13,12 +14,43 @@ spec:
     - ReadWriteOnce
   nfs:
     server: nfs-share
-    path: "/home/nfsroot/k8sdata/p1paytax-share"
+    path: "/home/nfsroot/k8sdata/p1paytax-cache"
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ .Release.Name }}-share
+  name: {{ .Release.Name }}-cache
+spec:
+  storageClassName: ""
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}  
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-zipfile
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  persistentVolumeReclaimPolicy: Retain
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: nfs-share
+    path: "/home/nfsroot/k8sdata/p1paytax-zipfile"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-zipfile
 spec:
   storageClassName: ""
   selector:
@@ -56,15 +88,21 @@ spec:
             - name: {{ . }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Release.Name }}-env
+                  name: {{ $jobName }}-env
                   key: {{ . }}
             {{- end }}
             volumeMounts:
-              - name: {{ .Release.Name }}-volume
-                mountPath: {{ .Values.app.mountPath }}
+              - name: {{ .Release.Name }}-volume-cache
+                mountPath: {{ .Values.app.cachePath }}
                 readOnly: false
+              - name: {{ .Release.Name }}-volume-zipfile
+                mountPath: {{ .Values.app.zipfilePath }}
+                readOnly: true
           volumes:
-            - name: {{ .Release.Name }}-volume
+            - name: {{ .Release.Name }}-volume-cache
               persistentVolumeClaim:
-                claimName: {{ .Release.Name }}-share
+                claimName: {{ .Release.Name }}-cache
+            - name: {{ .Release.Name }}-volume-zipfile
+              persistentVolumeClaim:
+                claimName: {{ .Release.Name }}-zipfile
           restartPolicy: OnFailure 

@@ -2,7 +2,8 @@
 # Declare variables to be passed into your templates.
 
 app:
-  mountPath: /application/cache
+  cachePath: /application/cache
+  zipfilePath: /application/zipfile
 
 backend:
   name: goapp
