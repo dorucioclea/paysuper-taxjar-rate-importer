@@ -7,7 +7,7 @@ app:
 backend:
   name: goapp
   role: cronjob
-  image: "p1hub/p1paytax"
+  image: "p1hub/paysupertaxjar"
   imageTag: latest
   env:
     - TAX_JAR_TOKEN
