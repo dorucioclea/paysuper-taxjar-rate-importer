@@ -16,15 +16,15 @@ import (
 
 // Response define root object from TaxJar rate api endpoint
 type Response struct {
-	Rate Rate `json:"rate,omitempty"`
+	Rate Rate `json:"rate"`
 }
 
 // Rate define rate object from TaxJar rate api endpoint
 type Rate struct {
-	Zip   string  `json:"zip,omitempty"`
-	State string  `json:"state,omitempty"`
-	City  string  `json:"city,omitempty"`
-	Rate  float32 `json:"combined_rate,string,omitempty"`
+	Zip   string  `json:"zip"`
+	State string  `json:"state"`
+	City  string  `json:"city"`
+	Rate  float32 `json:"combined_rate,string"`
 }
 
 // NewClient creates new application client to load and check vat rates.
