@@ -4,7 +4,7 @@
 app:
   mountPath: /application/cache
 
-job:
+backend:
   name: goapp
   role: cronjob
   image: "p1hub/p1paytax"
