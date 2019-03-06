@@ -8,18 +8,16 @@ import (
 )
 
 const (
-	Zip    = 0
-	City   = 3
-	State  = 5
-	County = 11
+	Zip   = 0
+	City  = 3
+	State = 5
 )
 
 // Record defines one entry from https://simplemaps.com/data/us-zips file with us zip codes.
 type Record struct {
-	Zip    string
-	City   string
-	State  string
-	County string
+	Zip   string
+	City  string
+	State string
 }
 
 func readZipCodeFile(file string) ([]*Record, error) {
@@ -52,10 +50,9 @@ func readZipCodeFile(file string) ([]*Record, error) {
 		}
 
 		locations = append(locations, &Record{
-			Zip:    row[Zip],
-			City:   row[City],
-			State:  row[State],
-			County: row[County],
+			Zip:   row[Zip],
+			City:  row[City],
+			State: row[State],
 		})
 	}
 }
