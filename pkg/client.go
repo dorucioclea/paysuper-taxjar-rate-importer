@@ -1,22 +1,26 @@
 package taxjar
 
 import (
+	"bytes"
 	"context"
+	"encoding/binary"
 	"encoding/json"
 	"fmt"
+	"github.com/syndtr/goleveldb/leveldb"
 	"go.uber.org/ratelimit"
 	"go.uber.org/zap"
 	"gopkg.in/resty.v1"
+	"math"
 	"sync"
 )
 
-// TaxJarRateResponse define root object from TaxJar rate api endpoint
-type TaxJarRateResponse struct {
-	Rate TaxJarRate `json:"rate,omitempty"`
+// Response define root object from TaxJar rate api endpoint
+type Response struct {
+	Rate Rate `json:"rate,omitempty"`
 }
 
-// TaxJarRate define rate object from TaxJar rate api endpoint
-type TaxJarRate struct {
+// Rate define rate object from TaxJar rate api endpoint
+type Rate struct {
 	Zip    string  `json:"zip,omitempty"`
 	State  string  `json:"state,omitempty"`
 	City   string  `json:"city,omitempty"`
@@ -24,20 +28,22 @@ type TaxJarRate struct {
 	Rate   float32 `json:"combined_rate,string,omitempty"`
 }
 
-func NewClient(maxRps int) *Client {
+func NewClient(db *leveldb.DB, maxRps int) *Client {
 	return &Client{
+		db:       db,
 		limiter:  ratelimit.New(maxRps),
 		context:  context.Background(),
 		wg:       sync.WaitGroup{},
-		messages: make(chan *TaxJarRate),
+		messages: make(chan *Rate),
 	}
 }
 
 type Client struct {
+	db       *leveldb.DB
 	limiter  ratelimit.Limiter
 	context  context.Context
 	wg       sync.WaitGroup
-	messages chan *TaxJarRate
+	messages chan *Rate
 }
 
 func (c *Client) RequestRate(r *Record) {
@@ -49,7 +55,7 @@ func (c *Client) RequestRate(r *Record) {
 		return
 	}
 
-	rateObj := &TaxJarRateResponse{}
+	rateObj := &Response{}
 	err = json.Unmarshal(resp.Body(), rateObj)
 	if err != nil {
 		zap.L().Error(
@@ -67,12 +73,28 @@ func (c *Client) RequestRate(r *Record) {
 func (c *Client) ProcessRates() {
 	for {
 		select {
-		case rate, ok := <-c.messages:
-			if ok {
-				fmt.Printf("Value %v was read.\n", rate)
-			} else {
-				fmt.Println("Channel closed!")
+		case r, ok := <-c.messages:
+			if !ok {
+				zap.L().Error("Process rate channel closed")
+				continue
 			}
+
+			data, err := c.db.Get([]byte(r.Zip), nil)
+			if err != nil && err != leveldb.ErrNotFound {
+				zap.L().Error("Can`t fetch cache data for zip", zap.Error(err), zap.String("zip", r.Zip))
+				continue
+			}
+
+			rateBytes := float64ToByte(r.Rate)
+			if bytes.Equal(data, rateBytes) {
+				continue
+			}
+			err = c.db.Put([]byte(r.Zip), rateBytes, nil)
+			if err != nil {
+				zap.L().Error("Can`t update cache data for zip", zap.Error(err), zap.String("zip", r.Zip))
+			}
+
+			fmt.Printf("Value %v was read.\n", r)
 		case <-c.context.Done():
 			return
 		}
@@ -85,14 +107,21 @@ func (c *Client) Run(file string) error {
 		return nil
 	}
 
+	go c.ProcessRates()
+
 	c.wg.Add(len(codes))
 	for _, r := range codes {
 		c.limiter.Take()
 		go c.RequestRate(r)
 	}
 
-	go c.ProcessRates()
 	c.wg.Wait()
 
 	return nil
+}
+
+func float64ToByte(f float32) []byte {
+	var buf [4]byte
+	binary.BigEndian.PutUint32(buf[:], math.Float32bits(f))
+	return buf[:]
 }
