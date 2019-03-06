@@ -2,8 +2,16 @@ package taxjar
 
 import (
 	"encoding/csv"
+	"go.uber.org/zap"
 	"io"
 	"os"
+)
+
+const (
+	Zip    = 0
+	City   = 3
+	State  = 5
+	County = 11
 )
 
 // Record defines one entry from https://simplemaps.com/data/us-zips file with us zip codes.
@@ -14,19 +22,17 @@ type Record struct {
 	County string
 }
 
-const (
-	Zip    = 0
-	City   = 3
-	State  = 5
-	County = 11
-)
-
 func readZipCodeFile(file string) ([]*Record, error) {
 	f, err := os.Open(file)
 	if err != nil {
 		return nil, err
 	}
-	defer f.Close()
+	defer func() {
+		err := f.Close()
+		if err != nil {
+			zap.L().Error("The csv file with zip code was closed with error", zap.Error(err))
+		}
+	}()
 
 	var locations []*Record
 

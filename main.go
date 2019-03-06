@@ -13,7 +13,7 @@ type Config struct {
 	TaxJarToken string `envconfig:"TAX_JAR_TOKEN" required:"true"`
 	ZipCodeFile string `envconfig:"ZIP_CODE_FILE" required:"false"`
 	CachePath   string `envconfig:"CACHE_PATH" required:"false" default:"./cache"`
-	MaxRPS      int    `envconfig:"MAX_RPS" required:"false" default:"10"`
+	MaxRPS      int    `envconfig:"MAX_RPS" required:"false" default:"250"`
 }
 
 func init() {

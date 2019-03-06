@@ -28,6 +28,7 @@ type Rate struct {
 	Rate   float32 `json:"combined_rate,string,omitempty"`
 }
 
+// NewClient creates new application client to load and check vat rates.
 func NewClient(db *leveldb.DB, maxRps int) *Client {
 	return &Client{
 		db:       db,
@@ -38,6 +39,7 @@ func NewClient(db *leveldb.DB, maxRps int) *Client {
 	}
 }
 
+// Client is a base object to to load and check vat rates.
 type Client struct {
 	db       *leveldb.DB
 	limiter  ratelimit.Limiter
@@ -46,6 +48,7 @@ type Client struct {
 	messages chan *Rate
 }
 
+// RequestRate query rates from TaxJax by zip code.
 func (c *Client) RequestRate(r *Record) {
 	defer c.wg.Done()
 
@@ -70,6 +73,7 @@ func (c *Client) RequestRate(r *Record) {
 	c.messages <- &rateObj.Rate
 }
 
+// ProcessRates check the rate changes against local embedded database and upload them in external micro service.
 func (c *Client) ProcessRates() {
 	for {
 		select {
@@ -94,6 +98,7 @@ func (c *Client) ProcessRates() {
 				zap.L().Error("Can`t update cache data for zip", zap.Error(err), zap.String("zip", r.Zip))
 			}
 
+			// Write to other micro service should be here.
 			fmt.Printf("Value %v was read.\n", r)
 		case <-c.context.Done():
 			return
@@ -101,6 +106,7 @@ func (c *Client) ProcessRates() {
 	}
 }
 
+// Run load zip codes from Simplemaps csv file and request rate for each zip code from TaxJar.
 func (c *Client) Run(file string) error {
 	codes, err := readZipCodeFile(file)
 	if err != nil {
