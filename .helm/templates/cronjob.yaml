@@ -1,0 +1,70 @@
+{{- $job := .Values.job -}}
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-share
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  persistentVolumeReclaimPolicy: Retain
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: nfs-share
+    path: "/home/nfsroot/k8sdata/p1paytax-share"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-share
+spec:
+  storageClassName: ""
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}  
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    role: {{ $job.role }}
+  annotations: 
+    released: {{ .Release.Time }} 
+spec:
+  schedule: 0 8 * * *
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: {{ .Release.Name }}
+            image: {{ $job.image }}:{{ $job.imageTag }}
+            env:
+            {{- range .Values.backend.env }}
+            - name: {{ . }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-env
+                  key: {{ . }}
+            {{- end }}
+            volumeMounts:
+              - name: {{ .Release.Name }}-volume
+                mountPath: {{ .Values.app.mountPath }}
+                readOnly: false
+          volumes:
+            - name: {{ .Release.Name }}-volume
+              persistentVolumeClaim:
+                claimName: {{ .Release.Name }}-share
+          restartPolicy: OnFailure 
