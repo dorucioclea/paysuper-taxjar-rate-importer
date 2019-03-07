@@ -20,7 +20,7 @@ require (
 	github.com/micro/go-micro v1.0.0
 	github.com/microcosm-cc/bluemonday v1.0.2 // indirect
 	github.com/openzipkin/zipkin-go v0.1.5 // indirect
-	github.com/paysuper/paysuper-tax-service v0.0.0-20190307125617-54afd3e745ea
+	github.com/paysuper/paysuper-tax-service v0.0.0-20190307144507-bfd72234bcad
 	github.com/prometheus/client_model v0.0.0-20190129233127-fd36f4220a90 // indirect
 	github.com/prometheus/common v0.2.0 // indirect
 	github.com/russross/blackfriday v2.0.0+incompatible // indirect
