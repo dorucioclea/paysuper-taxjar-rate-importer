@@ -1,0 +1,108 @@
+{{- $job := .Values.backend -}}
+{{- $jobName := printf "%s-%s" .Release.Name $job.name }}
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-cache
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  persistentVolumeReclaimPolicy: Retain
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: nfs-share
+    path: "/home/nfsroot/k8sdata/p1paytax-cache"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-cache
+spec:
+  storageClassName: ""
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}  
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-zipfile
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  persistentVolumeReclaimPolicy: Retain
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: nfs-share
+    path: "/home/nfsroot/k8sdata/p1paytax-zipfile"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-zipfile
+spec:
+  storageClassName: ""
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}  
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    role: {{ $job.role }}
+  annotations: 
+    released: {{ .Release.Time }} 
+spec:
+  schedule: 0 8 * * *
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: {{ .Release.Name }}
+            image: {{ $job.image }}:{{ $job.imageTag }}
+            env:
+            {{- range .Values.backend.env }}
+            - name: {{ . }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $jobName }}-env
+                  key: {{ . }}
+            {{- end }}
+            volumeMounts:
+              - name: {{ .Release.Name }}-volume-cache
+                mountPath: {{ .Values.app.cachePath }}
+                readOnly: false
+              - name: {{ .Release.Name }}-volume-zipfile
+                mountPath: {{ .Values.app.zipfilePath }}
+                readOnly: true
+          volumes:
+            - name: {{ .Release.Name }}-volume-cache
+              persistentVolumeClaim:
+                claimName: {{ .Release.Name }}-cache
+            - name: {{ .Release.Name }}-volume-zipfile
+              persistentVolumeClaim:
+                claimName: {{ .Release.Name }}-zipfile
+          restartPolicy: OnFailure 
