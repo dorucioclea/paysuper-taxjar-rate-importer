@@ -5,7 +5,9 @@ import (
 	"context"
 	"encoding/binary"
 	"encoding/json"
-	"fmt"
+	"github.com/micro/go-micro"
+	microservice "github.com/paysuper/paysuper-tax-service/pkg"
+	"github.com/paysuper/paysuper-tax-service/proto"
 	"github.com/syndtr/goleveldb/leveldb"
 	"go.uber.org/ratelimit"
 	"go.uber.org/zap"
@@ -29,8 +31,12 @@ type Rate struct {
 
 // NewClient creates new application client to load and check vat rates.
 func NewClient(db *leveldb.DB, maxRps int) *Client {
+	clientService := micro.NewService()
+	clientService.Init()
+
 	return &Client{
 		db:       db,
+		service:  tax_service.NewTaxService(microservice.ServiceName, clientService.Client()),
 		limiter:  ratelimit.New(maxRps),
 		context:  context.Background(),
 		wg:       sync.WaitGroup{},
@@ -41,6 +47,7 @@ func NewClient(db *leveldb.DB, maxRps int) *Client {
 // Client is a base object to to load and check vat rates.
 type Client struct {
 	db       *leveldb.DB
+	service  tax_service.TaxService
 	limiter  ratelimit.Limiter
 	context  context.Context
 	wg       sync.WaitGroup
@@ -68,6 +75,7 @@ func (c *Client) RequestRate(r *Record) {
 		)
 		return
 	}
+	rateObj.Rate.Zip = r.Zip
 
 	c.messages <- &rateObj.Rate
 }
@@ -92,13 +100,30 @@ func (c *Client) ProcessRates() {
 			if bytes.Equal(data, rateBytes) {
 				continue
 			}
-			err = c.db.Put([]byte(r.Zip), rateBytes, nil)
-			if err != nil {
-				zap.L().Error("Can`t update cache data for zip", zap.Error(err), zap.String("zip", r.Zip))
+
+			req := &tax_service.TaxRate{
+				Zip:     r.Zip,
+				Country: "US",
+				City:    r.City,
+				State:   r.State,
+				Rate:    r.Rate,
 			}
 
-			// Write to other micro service should be here.
-			fmt.Printf("Value %v was read.\n", r)
+			c.wg.Add(1)
+			go func() {
+				defer c.wg.Done()
+
+				_, err = c.service.CreateOrUpdate(context.TODO(), req)
+				if err != nil {
+					zap.L().Error("Can`t update data in tax service", zap.Error(err), zap.String("zip", r.Zip))
+					return
+				}
+
+				err = c.db.Put([]byte(r.Zip), rateBytes, nil)
+				if err != nil {
+					zap.L().Error("Can`t update cache data for zip", zap.Error(err), zap.String("zip", r.Zip))
+				}
+			}()
 		case <-c.context.Done():
 			return
 		}

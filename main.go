@@ -43,8 +43,8 @@ func main() {
 		}
 	}()
 
-	client := taxjar.NewClient(db, config.MaxRPS)
-	if err := client.Run(config.ZipCodeFile); err != nil {
+	taxService := taxjar.NewClient(db, config.MaxRPS)
+	if err := taxService.Run(config.ZipCodeFile); err != nil {
 		logger.Fatal("Update rates failed", zap.Error(err))
 	}
 
