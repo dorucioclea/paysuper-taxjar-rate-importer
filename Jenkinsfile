@@ -1,3 +1,3 @@
 @Library('p1pipeline')_
 
-p1pipeline("p1paytax","paysupertaxjar")
+p1pipeline("p1paytax","paysupertaxservice")
