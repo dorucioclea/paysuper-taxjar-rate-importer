@@ -30,13 +30,10 @@ type Rate struct {
 }
 
 // NewClient creates new application client to load and check vat rates.
-func NewClient(db *leveldb.DB, maxRps int) *Client {
-	clientService := micro.NewService()
-	clientService.Init()
-
+func NewClient(db *leveldb.DB, client micro.Service, maxRps int) *Client {
 	return &Client{
 		db:       db,
-		service:  tax_service.NewTaxService(microservice.ServiceName, clientService.Client()),
+		service:  tax_service.NewTaxService(microservice.ServiceName, client.Client()),
 		limiter:  ratelimit.New(maxRps),
 		context:  context.Background(),
 		wg:       sync.WaitGroup{},
