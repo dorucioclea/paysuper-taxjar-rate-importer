@@ -61,6 +61,16 @@ func (c *Client) RequestRate(r *Record) {
 		return
 	}
 
+	if resp.StatusCode() != 200 {
+		zap.L().Error(
+			"TaxJar request failed with code",
+			zap.Int("code", resp.StatusCode()),
+			zap.String("status", resp.Status()),
+			zap.String("zip", r.Zip),
+		)
+		return
+	}
+
 	rateObj := &Response{}
 	err = json.Unmarshal(resp.Body(), rateObj)
 	if err != nil {
