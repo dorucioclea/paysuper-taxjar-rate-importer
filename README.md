@@ -2,6 +2,7 @@
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache2.0-green.svg)](https://opensource.org/licenses/Apache2.0)
 [![Go Report Card](https://goreportcard.com/badge/github.com/paysuper/paysuper-taxjar-rate-importer)](https://goreportcard.com/report/github.com/paysuper/paysuper-taxjar-rate-importer)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=paysuper_paysuper-taxjar-rate-importer&metric=alert_status)](https://sonarcloud.io/dashboard?id=paysuper_paysuper-taxjar-rate-importer)
 
 # Motivation
 We use local tax rate table in PaySuper and this application used to per day sync data from TaxJar API to

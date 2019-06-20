@@ -3,6 +3,11 @@ sudo: false
 go:
 - 1.11.x
 
+dist: trusty
+addons:
+  sonarcloud:
+    organization: "paysuper"
+
 stages:
   - test
   - name: deploy 
@@ -16,6 +21,7 @@ jobs:
     install: true
     script:
     - go test ./... -coverprofile=coverage.out -covermode=atomic
+    - sonar-scanner
     after_success:
     - bash <(curl -s https://codecov.io/bash)
   - stage: deploy
