@@ -84,6 +84,8 @@ spec:
           - name: {{ .Release.Name }}
             image: {{ $job.image }}:{{ $job.imageTag }}
             env:
+            - name: MICRO_SELECTOR
+              value: "static"
             {{- range .Values.backend.env }}
             - name: {{ . }}
               valueFrom:
