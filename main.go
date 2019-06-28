@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/kelseyhightower/envconfig"
 	"github.com/micro/go-micro"
-	k8s "github.com/micro/kubernetes/go/micro"
 	"github.com/paysuper/paysuper-taxjar-rate-importer/pkg"
 	"github.com/syndtr/goleveldb/leveldb"
 	"go.uber.org/zap"
@@ -12,11 +11,10 @@ import (
 
 // Config define application config object
 type Config struct {
-	KubernetesHost string `envconfig:"KUBERNETES_SERVICE_HOST" required:"false"`
-	TaxJarToken    string `envconfig:"TAX_JAR_TOKEN" required:"true"`
-	ZipCodeFile    string `envconfig:"ZIP_CODE_FILE" required:"false"`
-	CachePath      string `envconfig:"CACHE_PATH" required:"false" default:"./cache"`
-	MaxRPS         int    `envconfig:"MAX_RPS" required:"false" default:"250"`
+	TaxJarToken string `envconfig:"TAX_JAR_TOKEN" required:"true"`
+	ZipCodeFile string `envconfig:"ZIP_CODE_FILE" required:"false"`
+	CachePath   string `envconfig:"CACHE_PATH" required:"false" default:"./cache"`
+	MaxRPS      int    `envconfig:"MAX_RPS" required:"false" default:"250"`
 }
 
 func init() {
@@ -46,15 +44,9 @@ func main() {
 		}
 	}()
 
-	var clientService micro.Service
-	if config.KubernetesHost == "" {
-		clientService = micro.NewService()
-		logger.Info("Initialize micro service")
-	} else {
-		clientService = k8s.NewService()
-		logger.Info("Initialize k8s service")
-	}
+	logger.Info("Initialize micro service")
 
+	clientService := micro.NewService()
 	clientService.Init()
 
 	taxService := taxjar.NewClient(db, clientService, config.MaxRPS)
