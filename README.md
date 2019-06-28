@@ -20,6 +20,11 @@ Application designed to be launched with Kubernetes and handle all configuration
 | CACHE_PATH    | The path to folder local LevelDB cache for rates. Default is `./cache`                                 |
 | MAX_RPS       | The max allowed RPS for TaxJar API. Default is `250`                                                   |
 
+## Contributing
+We feel that a welcoming community is important and we ask that you follow PaySuper's [Open Source Code of Conduct](https://github.com/paysuper/code-of-conduct/blob/master/README.md) in all interactions with the community.
 
+PaySuper welcomes contributions from anyone and everyone. Please refer to each project's style and contribution guidelines for submitting patches and additions. In general, we follow the "fork-and-pull" Git workflow.
+
+The master branch of this repository contains the latest stable release of this component.
 
  
