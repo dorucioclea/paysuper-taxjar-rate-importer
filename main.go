@@ -3,10 +3,12 @@ package main
 import (
 	"github.com/kelseyhightower/envconfig"
 	"github.com/micro/go-micro"
+	"github.com/micro/go-plugins/selector/static"
 	"github.com/paysuper/paysuper-taxjar-rate-importer/pkg"
 	"github.com/syndtr/goleveldb/leveldb"
 	"go.uber.org/zap"
 	"gopkg.in/resty.v1"
+	"os"
 )
 
 // Config define application config object
@@ -46,7 +48,14 @@ func main() {
 
 	logger.Info("Initialize micro service")
 
-	clientService := micro.NewService()
+	var options []micro.Option
+
+	if os.Getenv("MICRO_SELECTOR") == "static" {
+		logger.Info("Use micro selector `static`")
+		options = append(options, micro.Selector(static.NewSelector()))
+	}
+
+	clientService := micro.NewService(options...)
 	clientService.Init()
 
 	taxService := taxjar.NewClient(db, clientService, config.MaxRPS)
