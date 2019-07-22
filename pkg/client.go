@@ -26,7 +26,7 @@ type Rate struct {
 	Zip   string  `json:"zip"`
 	State string  `json:"state"`
 	City  string  `json:"city"`
-	Rate  float32 `json:"combined_rate,string"`
+	Rate  float64 `json:"combined_rate,string"`
 }
 
 // NewClient creates new application client to load and check vat rates.
@@ -157,8 +157,8 @@ func (c *Client) Run(file string) error {
 	return nil
 }
 
-func float64ToByte(f float32) []byte {
-	var buf [4]byte
-	binary.BigEndian.PutUint32(buf[:], math.Float32bits(f))
+func float64ToByte(f float64) []byte {
+	var buf [8]byte
+	binary.BigEndian.PutUint64(buf[:], math.Float64bits(f))
 	return buf[:]
 }
