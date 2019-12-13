@@ -1,35 +1,40 @@
 module github.com/paysuper/paysuper-taxjar-rate-importer
 
 require (
-	github.com/99designs/gqlgen v0.7.2 // indirect
-	github.com/Jeffail/gabs v1.1.1 // indirect
-	github.com/SAP/go-hdb v0.13.2 // indirect
-	github.com/SermoDigital/jose v0.9.2-0.20161205224733-f6df55f235c2 // indirect
-	github.com/asaskevich/govalidator v0.0.0-20180720115003-f9ffefc3facf // indirect
-	github.com/denisenkom/go-mssqldb v0.0.0-20190121005146-b04fd42d9952 // indirect
-	github.com/elazarl/go-bindata-assetfs v1.0.0 // indirect
-	github.com/fatih/structs v1.1.0 // indirect
-	github.com/gocql/gocql v0.0.0-20190122205811-30de9a1866a8 // indirect
-	github.com/google/go-querystring v1.0.0 // indirect
-	github.com/hashicorp/go-memdb v0.0.0-20181108192425-032f93b25bec // indirect
-	github.com/hashicorp/go-plugin v0.0.0-20181212150838-f444068e8f5a // indirect
+	dmitri.shuralyov.com/app/changes v0.0.0-20181114035150-5af16e21babb // indirect
+	dmitri.shuralyov.com/service/change v0.0.0-20190203025214-430bf650e55a // indirect
+	github.com/NYTimes/gziphandler v1.0.1 // indirect
 	github.com/kelseyhightower/envconfig v1.3.0
-	github.com/keybase/go-crypto v0.0.0-20181127160227-255a5089e85a // indirect
-	github.com/micro/go-api v0.6.0 // indirect
-	github.com/micro/go-config v0.14.0 // indirect
 	github.com/micro/go-micro v1.8.0
 	github.com/micro/go-plugins v1.2.0
-	github.com/micro/go-rcache v0.2.1 // indirect
-	github.com/micro/util v0.2.0 // indirect
+	github.com/microcosm-cc/bluemonday v1.0.2 // indirect
 	github.com/mitchellh/copystructure v1.0.0 // indirect
+	github.com/mitchellh/reflectwalk v1.0.1 // indirect
 	github.com/openzipkin/zipkin-go v0.1.6 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
-	github.com/paysuper/paysuper-tax-service v0.0.0-20190722140034-a37f835eaad7
+	github.com/paysuper/paysuper-tax-service v1.0.0
+	github.com/russross/blackfriday v2.0.0+incompatible // indirect
+	github.com/shurcooL/go v0.0.0-20190121191506-3fef8c783dec // indirect
+	github.com/shurcooL/gofontwoff v0.0.0-20181114050219-180f79e6909d // indirect
+	github.com/shurcooL/highlight_diff v0.0.0-20181222201841-111da2e7d480 // indirect
+	github.com/shurcooL/highlight_go v0.0.0-20181215221002-9d8641ddf2e1 // indirect
+	github.com/shurcooL/htmlg v0.0.0-20190120222857-1e8a37b806f3 // indirect
+	github.com/shurcooL/httpfs v0.0.0-20181222201310-74dc9339e414 // indirect
+	github.com/shurcooL/issues v0.0.0-20190120000219-08d8dadf8acb // indirect
+	github.com/shurcooL/issuesapp v0.0.0-20181229001453-b8198a402c58 // indirect
+	github.com/shurcooL/notifications v0.0.0-20181111060504-bcc2b3082a7a // indirect
+	github.com/shurcooL/octicon v0.0.0-20181222203144-9ff1a4cf27f4 // indirect
+	github.com/shurcooL/reactions v0.0.0-20181222204718-145cd5e7f3d1 // indirect
+	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
+	github.com/shurcooL/webdavfs v0.0.0-20181215192745-5988b2d638f6 // indirect
 	github.com/syndtr/goleveldb v1.0.0
 	go.uber.org/ratelimit v0.1.0
 	go.uber.org/zap v1.10.0
+	go4.org v0.0.0-20181109185143-00e24f1b2599 // indirect
+	golang.org/x/perf v0.0.0-20190124201629-844a5f5b46f4 // indirect
 	gopkg.in/mgo.v2 v2.0.0-20180705113604-9856a29383ce // indirect
 	gopkg.in/resty.v1 v1.12.0
+	sourcegraph.com/sqs/pbtypes v1.0.0 // indirect
 )
 
 replace (
