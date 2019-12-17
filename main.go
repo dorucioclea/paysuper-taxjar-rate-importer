@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/kelseyhightower/envconfig"
 	"github.com/micro/go-micro"
-	"github.com/micro/go-plugins/selector/static"
+	"github.com/micro/go-plugins/client/selector/static"
 	"github.com/paysuper/paysuper-taxjar-rate-importer/pkg"
 	"github.com/syndtr/goleveldb/leveldb"
 	"go.uber.org/zap"
