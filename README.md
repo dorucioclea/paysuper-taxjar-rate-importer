@@ -11,7 +11,7 @@ PaySuper TaxJar VAT everyday syncs data from the TaxJar API to the PaySuper loca
 
 ## Table of Contents
 
-- [Usage](#developing)
+- [Usage](#usage)
 - [Contributing](#contributing-feature-requests-and-support)
 - [License](#license)
 
