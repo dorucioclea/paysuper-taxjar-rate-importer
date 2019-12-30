@@ -2,7 +2,7 @@
 
 [![License: GPL 3.0](https://img.shields.io/badge/License-GPL3.0-green.svg)](https://opensource.org/licenses/Gpl3.0)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/paysuper/paysuper-taxjar-rate-importer/issues)
-[![Build Status](https://travis-ci.org/paysuper/paysuper-tax-service.svg?branch=master)](https://travis-ci.org/paysuper/paysuper-tax-service)
+[![Build Status](https://travis-ci.org/paysuper/paysuper-tax-service.svg?branch=develop)](https://travis-ci.org/paysuper/paysuper-tax-service)
 [![Go Report Card](https://goreportcard.com/badge/github.com/paysuper/paysuper-taxjar-rate-importer)](https://goreportcard.com/report/github.com/paysuper/paysuper-taxjar-rate-importer)
 
 PaySuper TaxJar VAT everyday syncs data from the TaxJar API to the PaySuper local storage for the taxes rates (only combined rates are synchronised). This service uses the Simplemaps database of the USA USPS zip codes (5 digits) to fetch data from the TaxJar API.
