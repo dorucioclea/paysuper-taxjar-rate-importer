@@ -10,7 +10,6 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.2 // indirect
 	github.com/mitchellh/copystructure v1.0.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.1 // indirect
-	github.com/openzipkin/zipkin-go v0.1.6 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
 	github.com/paysuper/paysuper-tax-service v1.0.0
 	github.com/russross/blackfriday v2.0.0+incompatible // indirect
@@ -32,12 +31,14 @@ require (
 	go.uber.org/zap v1.10.0
 	go4.org v0.0.0-20181109185143-00e24f1b2599 // indirect
 	golang.org/x/perf v0.0.0-20190124201629-844a5f5b46f4 // indirect
-	gopkg.in/mgo.v2 v2.0.0-20180705113604-9856a29383ce // indirect
 	gopkg.in/resty.v1 v1.12.0
 	sourcegraph.com/sqs/pbtypes v1.0.0 // indirect
 )
 
 replace (
+	github.com/gogo/protobuf => github.com/gogo/protobuf v1.3.0
 	github.com/hashicorp/consul => github.com/hashicorp/consul v1.5.2
 	github.com/hashicorp/consul/api => github.com/hashicorp/consul/api v1.1.0
 )
+
+go 1.13
